@@ -1,0 +1,45 @@
+GET http://localhost:3002
+
+###
+GET http://localhost:3002/login
+
+### , This below won't work because we have not defined the post method for the end point /
+POST http://localhost:3002
+
+### But the one below will work because we've defined the endpoint /register
+POST http://localhost:3002/register
+Content-Type: application/json
+
+{
+    "username": "Anita Reyes",
+    "password": "1234z"
+}
+
+###DELETE Request
+DELETE http://localhost:3002/users/15
+
+###PUT request
+PUT http://localhost:3002/users
+Content-Type: application/json
+
+[
+    {
+        "id":15,
+        "username": "Anita Reyes",
+        "password": "1234z"
+    },
+    {
+        "id":16,
+        "username": "Anita Reyes",
+        "password": "1234z"
+    }
+
+]
+###
+
+PATCH  http://localhost:3002/users/12
+Content-Type: application/json
+
+{
+    "username":"Nakityo"
+}
