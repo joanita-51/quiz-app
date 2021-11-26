@@ -29,7 +29,20 @@ app.post('/register', (req,res)=>{
 
 app.delete('/users/:id', (req,res) =>{
     const {id}= req.params
-    res.send(`Deleted ${id}`)
+    let ids = id.split(',')
+    console.log (typeof ids);
+    let str = ' '
+    let deletedCount = 0
+    ids.forEach(id => {
+        deletedCount++;
+        str += `${id}`
+    });
+    
+    res.json({
+        'result':'success',
+        'total_items_deleted': deletedCount,
+        'deleted_items':str
+    })
 })
 
 app.put('/users', (req,res)=>{

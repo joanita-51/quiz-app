@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 
 ###DELETE Request
-DELETE http://localhost:3002/users/15
+DELETE http://localhost:3002/users/15, 16, 17, 18, 19
 
 ###PUT request
 PUT http://localhost:3002/users
