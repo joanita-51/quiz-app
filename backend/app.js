@@ -2,6 +2,8 @@ const express = require ('express');
 const app = express();
 require('dotenv').config();
 
+const User = require('./models/user')
+
 const {MONGODB_URL} = process.env;
 
 const mongoose = require ('mongoose')
@@ -18,22 +20,38 @@ app.get('/', (req,res)=>{ //get(tells the app to pick information) takes in two 
     res.send('Hello world!')// respond with this text
 });
 
-app.get('/login', (req,res)=>{
-    res.json({
-        'result':'success',
-        'message':'Login Successful'
+app.post('/login', async (req,res)=>{
+    const user = await User.getUser()
+    if(user !== null){
+        res.json({
+            'result':'success',
+            'message':'Login Successful'
+        })
+    }
+    return res.json({
+        'result':'failure',
+        'message':'Login Failed'
     })
+
 })
 
 app.post('/register', (req,res)=>{
     //Register logic
-
+    const {username, password} = req.body
+    const user = new User({username, password});
+    await user.save()
     console.log(req.body)
+    if(user !== null){
+        res.json({
+            'result':'success',
+            'message':'Register Successful'
+        })
+    }
+    return res.json({
+        'result':'failure',
+        'message':'Register failed'
+    });
 
-    res.json({
-        'result':'success',
-        'message':'Register Successful'
-    })
 })
 
 app.delete('/users/:id', (req,res) =>{
