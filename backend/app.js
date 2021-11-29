@@ -35,7 +35,7 @@ app.post('/login', async (req,res)=>{
 
 })
 
-app.post('/register', (req,res)=>{
+app.post('/register', async (req,res)=>{
     //Register logic
     const {username, password} = req.body
     const user = new User({username, password});
