@@ -36,6 +36,8 @@ app.post('/login', async (req,res)=>{
 })
 
 app.post('/register', async (req,res)=>{
+    try {
+
     //Register logic
     const {username, password} = req.body
     const user = new User({username, password});
@@ -44,13 +46,19 @@ app.post('/register', async (req,res)=>{
     if(user !== null){
         res.json({
             'result':'success',
-            'message':'Register Successful'
+            'message':'Register Successful',
+            'user': user
         })
     }
     return res.json({
         'result':'failure',
         'message':'Register failed'
     });
+        
+    } catch (error) {
+        console.log(error)
+    }
+
 
 })
 
