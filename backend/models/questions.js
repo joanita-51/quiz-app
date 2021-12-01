@@ -7,8 +7,9 @@ const questionsSchema = new mongoose.Schema ({
     },
     question: String,
     author: String,
-    timelimit:Time,
+    timelimit:Date,
     category:String,
+    //required:true,
     platform:{
         name:String
     },
@@ -24,19 +25,21 @@ const questionsSchema = new mongoose.Schema ({
             type: Date,
             default:Date.now()
         },
-        question_id:questions._id,
+        question_id:question._id,
         student_id:user._id,
         response:String,
         status:String,
-        duration:Time,
+        duration:Date,
         score:Number,
         Reviewer:String,
         Remarks:String,
         Rating: String
     },
     Answers:{
-        question_id:questions._id,
+        question_id:question._id,
         pontentialAnswers:[ ]
     }
 
 })
+
+module.exports = mongoose.model('question',questionsSchema)
