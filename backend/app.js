@@ -1,18 +1,17 @@
-const express = require ('express');
-const app = express();
+const express = require('express');
+// const mongoose = require('mongoose');
 require('dotenv').config();
-
-const User = require('./models/user')
-
-const {MONGODB_URL} = process.env;
-
-const mongoose = require ('mongoose')
-const port = 3002;
+const dbConnect = require('./config/db');
+const User = require('./models/user');
+const routerUser = require('./routes/user');
 try {
-   mongoose.connect(MONGODB_URL,{useNewUrlParser:true}) 
+    dbConnect()
 } catch (error) {
-   console.log (error) 
+    console.log(error)
 }
+
+const app = express();
+const port = process.env.PORT || 3002;
 //middle ware used to intercept our calls
 app.use(express.json());
 
@@ -20,27 +19,19 @@ app.get('/', (req,res)=>{ //get(tells the app to pick information) takes in two 
     res.send('Hello world!')// respond with this text
 });
 
-app.post('/login', async (req,res)=>{
-    const user = await User.getUser()
-    if(user !== null){
-        res.json({
-            'result':'success',
-            'message':'Login Successful'
-        })
-    }
-    return res.json({
-        'result':'failure',
-        'message':'Login Failed'
-    })
+app.use('/users', routerUser);
 
-})
+app.post('/login', async (req, res) => {
+    res.json({'message':'under development'})
+});
+
 
 app.post('/register', async (req,res)=>{
+    const {username, password} = req.body
     try {
 
     //Register logic
-    const {username, password} = req.body
-    const user = new User({username, password});
+     const user = new User({username, password});
     await user.save()
     console.log(req.body)
     if(user !== null){
@@ -57,6 +48,11 @@ app.post('/register', async (req,res)=>{
         
     } catch (error) {
         console.log(error)
+        return res.json({
+            "result":"failure",
+            "message":"Maybe the username is already taken",
+            "Description":" Register failed"
+        })
     }
 
 

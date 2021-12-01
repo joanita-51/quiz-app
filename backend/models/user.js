@@ -19,10 +19,65 @@ const userSchema = mongoose.Schema({
 //get a user from the database
 userSchema.statics.getUser =  async(username)=>{
     //the one in the database : the one specified to be found
-    return await user.findOne({username:username});
+    const USER = await user.findOne({username:username});
+    return{
+        id:USER._id,
+        createdAt:USER.createdAt,
+        username:USER.username
+    }
 }
-userSchema.statics.add = async()=>{
-    
+userSchema.statics.getUserByTerm = async(term = null)=>{
+    let users = await user.find({name:term});
+    if(users?.length>0){
+        users.map(user =>({
+            id:user._id,
+            createdAt:user.createdAt,
+            username:user.username,
+        }))
+        return users
+    }
+
+    users = await user.find({email:term});
+    if(users?.length>0){
+        users.map(user =>({
+            id:user._id,
+            createdAt:user.createdAt,
+            username:user.username,
+        }))
+        return users
+    }
+
+    users = await user.find({username:term});
+    if(users?.length>0){
+        users.map(user =>({
+            id:user._id,
+            createdAt:user.createdAt,
+            username:user.username,
+        }))
+        return users
+    }
+
+    users = await user.find({phone:term});
+    if(users?.length>0){
+        users.map(user =>({
+            id:user._id,
+            createdAt:user.createdAt,
+            username:user.username,
+        }))
+        return users
+    }
+
+    return null
+
+}
+
+userSchema.statics.getUserById = async(id)=>{
+    const USER = await user.findById(id);
+    return {
+        id: USER._id,
+        createdAt:USER.createdAt,
+        username:USER.username,
+    }
 }
 
 //it needs to be exported

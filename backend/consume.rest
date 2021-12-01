@@ -1,7 +1,15 @@
 GET http://localhost:3002
 
-###
+###Get user by username 
+GET http://localhost:3002/users/username/Anita
+
+### Get user by id
+GET http://localhost:3002/users/id/61a4e20d1e5ccecbd8765dc7
+
+## Get login
+
 POST  http://localhost:3002/login
+
 Content-Type: application/json
 
 {
@@ -10,6 +18,10 @@ Content-Type: application/json
 }
 
 ### , This below won't work because we have not defined the post method for the end point /
+
+## Get user by username
+GET h
+## post login
 POST http://localhost:3002
 
 ### But the one below will work because we've defined the endpoint /register
