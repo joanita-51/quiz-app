@@ -1,107 +1,99 @@
-const express = require('express');
-// const mongoose = require('mongoose');
-require('dotenv').config();
-const dbConnect = require('./config/db');
-const User = require('./models/user');
-const routerUser = require('./routes/user');
-try {
-    dbConnect()
-} catch (error) {
-    console.log(error)
+
+const mongoose = require('mongoose')
+
+const examSchema = mongoose.Schema({
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    author: {
+        type: String,
+        required: true
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    allowedStudents: [],
+    questions: {
+        type: Array,
+        number: {
+            type: Number,
+            required: true,
+            unique: true
+        },
+        elementType: { type: String },
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        },
+        label: {
+            type: String,
+            required: 1
+        },
+        choices: [],
+        answerForChoices: [],
+        potentialAnswersForTextAreaInput: [],
+        radioexamAnswer: {
+            type: String
+        },
+        author: String,
+        timeLimit: {
+            type: Number,
+        },
+        category: {
+            type: String,
+            required: 1
+        },
+        isRequired: Boolean,
+        platform: String,
+        score: Number,
+        expireAt: {
+            type: Date,
+        },
+        responses: {
+            type: Array,
+            createdAt: {
+                type: Date,
+                default: Date.now,
+                required: 1
+            },
+            studentId: {
+                type: String,
+                required: 1
+            },
+            answer: String,
+            status: {
+                type: String,
+            },
+            duration: {
+                type: Number,
+                required: 1,
+            },
+            score: Number,
+            reviewer: String,
+            remarks: String,
+            rating: Number
+        }
+    }
+})
+
+examSchema.statics.getExams = (author = null) => {
+    return author !== null ? exam.find({ author: author }) : exam.find()
 }
 
-const app = express();
-const port = process.env.PORT || 3002;
-//middle ware used to intercept our calls
-app.use(express.json());
+examSchema.statics.getExam = (examId) => {
+    return exam.findOne({ _id: examId })
+}
 
-app.get('/', (req,res)=>{ //get(tells the app to pick information) takes in two parameters i.e. the path and the call back ..req is to pick information
-    res.send('Hello world!')// respond with this text
-});
+examSchema.statics.update = (data) => {
+    return exam.findOneAndUpdate({ _id: data._id }, data)
+}
 
-app.use('/users', routerUser);
+examSchema.statics.delete = (examId) => {
+    return exam.findOneAndDelete({ _id: examId })
+}
 
-app.post('/login', async (req, res) => {
-    res.json({'message':'under development'})
-});
-
-
-app.post('/register', async (req,res)=>{
-    const {username, password} = req.body
-    try {
-
-    //Register logic
-     const user = new User({username, password});
-    await user.save()
-    console.log(req.body)
-    if(user !== null){
-        res.json({
-            'result':'success',
-            'message':'Register Successful',
-            'user': user
-        })
-    }
-    return res.json({
-        'result':'failure',
-        'message':'Register failed'
-    });
-        
-    } catch (error) {
-        console.log(error)
-        return res.json({
-            "result":"failure",
-            "message":"Maybe the username is already taken",
-            "Description":" Register failed"
-        })
-    }
-
-
-})
-
-app.delete('/users/:id', (req,res) =>{
-    const {id}= req.params
-    let ids = id.split(',')
-    console.log (typeof ids);
-    let str = ' '
-    let deletedCount = 0
-    ids.forEach(id => {
-        deletedCount++;
-        str += `${id}`
-    });
-    
-    res.json({
-        'result':'success',
-        'total_items_deleted': deletedCount,
-        'deleted_items':str
-    })
-})
-
-app.put('/users', (req,res)=>{
-    console.log(req.body)
-    res.send('Update User')
-})
-
-app.patch('/users/:id', (req, res)=>{
-    const {id} = req.params;
-    
-    let user = {
-        'id':12,
-        'username':'Reyes',
-        'gender':'Female',
-        'email':'reyes@gmail.com'
-
-    }
-    console.log('Old user',user)
-    const {username} = req.body;
-     if (user.id = id){
-        user.username = username;
-        res.send(`Updated ${id} to ${username}`)
-     } else {
-         res.send(`User ${id} not found`)
-     }
-   
-})
-app.listen(port, ()=>{
-    console.log(`API working on localhost ${port}`)
-})
+const exam = mongoose.model('Exam', examSchema)
+module.exports = exam
 

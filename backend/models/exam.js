@@ -7,7 +7,7 @@ const questionsSchema = new mongoose.Schema ({
     },
     question: String,
     author: String,
-    timelimit:Date,
+    timeLimit:Date,
     category:String,
     //required:true,
     platform:{
@@ -25,18 +25,18 @@ const questionsSchema = new mongoose.Schema ({
             type: Date,
             default:Date.now()
         },
-        question_id:question._id,
-        student_id:user._id,
+        questionId:question._id,
+        studentId:user._id,
         response:String,
         status:String,
         duration:Date,
         score:Number,
-        Reviewer:String,
-        Remarks:String,
-        Rating: String
+        reviewer:String,
+        remarks:String,
+        rating: String
     },
     Answers:{
-        question_id:question._id,
+        questionId:question._id,
         pontentialAnswers:[ ]
     }
 
